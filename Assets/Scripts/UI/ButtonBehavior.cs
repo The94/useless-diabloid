@@ -1,20 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ButtonBehavior : MonoBehaviour
 {
-    [SerializeField] private Texture _normal;
-    [SerializeField] private Texture _mouseOver;
-    [SerializeField] private Texture _pressed;
-    [SerializeField] private RectTransform _textRect;
+    [SerializeField] private Texture       _normal    = null;
+    [SerializeField] private Texture       _mouseOver = null;
+    [SerializeField] private Texture       _pressed   = null;
+    [SerializeField] private RectTransform _textRect  = null;
 
+    private Vector2  _offsetDefault = new Vector2(0,   0);
+    private Vector2  _offsetPressed = new Vector2(0, -10);
     private RawImage _buttonImage;
 
     private void SetButtonTexture(Texture texture)
     {
-        _buttonImage.texture = texture;
+        if (texture != null)
+        {
+            _buttonImage.texture = texture;
+        }
     }
 
     private void SetTextOffset(Vector2 offsetMax)
@@ -25,31 +28,42 @@ public class ButtonBehavior : MonoBehaviour
         }
     }
 
-    private void Start() {
+    private void Start()
+    {
         _buttonImage = GetComponent<RawImage>();
+        if(_buttonImage == null)
+        {
+            Debug.LogError("Button component RawImage not found!");
+        }
         SetButtonTexture(_normal);
     }
 
-    private void OnMouseOver() {
-        if (!Input.GetMouseButton(0)) {
+    private void OnMouseOver()
+    {
+        if (!Input.GetMouseButton(0))
+        {
             SetButtonTexture(_mouseOver);
         }
     }
 
-    private void OnMouseExit() {
-        if (!Input.GetMouseButton(0)) {
+    private void OnMouseExit()
+    {
+        if (!Input.GetMouseButton(0))
+        {
             SetButtonTexture(_normal);
         }
     }
 
-    private void OnMouseDown() {
+    private void OnMouseDown()
+    {
         SetButtonTexture(_pressed);
-        SetTextOffset(new Vector2(0, -10));
+        SetTextOffset(_offsetPressed);
     }
 
-    private void OnMouseUp() {
+    private void OnMouseUp()
+    {
         SetButtonTexture(_normal);
-        SetTextOffset(new Vector2(0, 0));
+        SetTextOffset(_offsetDefault);
     }
 }
 
